@@ -1,3 +1,4 @@
+package vo;
 
 public class NaverBookItem {
     private String title;

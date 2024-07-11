@@ -1,3 +1,7 @@
+import command.BookLoanService;
+import command.BookSearchService;
+import vo.Book;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -26,7 +30,7 @@ public class Main {
                     String query = scanner.nextLine();
                     try {
                         String response = bookSearchService.searchBooks(query);
-                        // 네이버 API에서 가져온 데이터를 Book 객체로 변환 및 저장
+                        // 네이버 API에서 가져온 데이터를 vo.Book 객체로 변환 및 저장
                         bookSearchService.saveBooksFromResponse(response, bookLoanService);
                         System.out.println("책 검색 완료");
                     } catch (IOException e) {

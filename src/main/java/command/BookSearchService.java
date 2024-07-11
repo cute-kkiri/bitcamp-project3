@@ -1,7 +1,12 @@
+package command;
+
 import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import vo.Book;
+import vo.NaverBookItem;
+import vo.NaverBookResponse;
 
 import java.io.IOException;
 
@@ -33,7 +38,7 @@ public class BookSearchService {
         }
     }
 
-    // 네이버 API에서 검색한 책 정보를 Book 객체로 변환하여 저장
+    // 네이버 API에서 검색한 책 정보를 vo.Book 객체로 변환하여 저장
     public void saveBooksFromResponse(String responseJson, BookLoanService bookLoanService) {
         Gson gson = new Gson();
         NaverBookResponse naverResponse = gson.fromJson(responseJson, NaverBookResponse.class);

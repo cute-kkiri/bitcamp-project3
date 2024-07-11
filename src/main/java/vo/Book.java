@@ -1,3 +1,5 @@
+package vo;
+
 public class Book {
     private String title;
     private String author;
@@ -36,7 +38,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
+        return "vo.Book{" +
                 "title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", isbn='" + isbn + '\'' +
