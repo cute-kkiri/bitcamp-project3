@@ -1,16 +1,24 @@
-import command.BookLoanService;
-import command.BookSearchService;
+package command;
+
+import util.Prompt;
 import vo.Book;
+import vo.User;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        BookSearchService bookSearchService = new BookSearchService();
-        BookLoanService bookLoanService = new BookLoanService();
-        Scanner scanner = new Scanner(System.in);
+public class BookCommand {
+    List<Book> bookList;
+    BookSearchService bookSearchService = new BookSearchService();
+    BookLoanService bookLoanService = new BookLoanService();
+    Scanner scanner = new Scanner(System.in);
 
+    public BookCommand(List<Book> bookList) {
+        this.bookList = bookList;
+    }
+
+    public void execute(User user) {
         while (true) {
             System.out.println("============무인 도서 대출/반납 서비스============");
             System.out.println("1. 도서 대출");
@@ -26,10 +34,8 @@ public class Main {
             switch (choice) {
 
                 case 1:
-                    System.out.print("검색어를 입력하세요: ");
-                    String query = scanner.nextLine();
                     try {
-                        String response = bookSearchService.searchBooks(query);
+                        String response = bookSearchService.searchBooks(Prompt.input("%s> ", "검색어를 입력하세요:"));
                         // 네이버 API에서 가져온 데이터를 vo.Book 객체로 변환 및 저장
                         bookSearchService.saveBooksFromResponse(response, bookLoanService);
                         System.out.println("책 검색 완료");
@@ -38,20 +44,17 @@ public class Main {
                     }
 
                     // 대출 기능 구현 부분
-                    System.out.print("대출할 책의 ISBN을 입력하세요: ");
-                    String loanIsbn = scanner.nextLine();
-                    Book loanedBook = bookLoanService.loanBook(loanIsbn);
+                    Book loanedBook = bookLoanService.loanBook(user, Prompt.input("%s> ", "대출할 책의 ISBN을 입력하세요:"));
                     if (loanedBook != null) {
                         System.out.println(loanedBook.getTitle() + " 책이 대출되었습니다.");
+                        System.out.println(user.getName());
                     } else {
                         System.out.println("책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다.");
                     }
                     break;
                 case 2:
                     // 반납 기능 구현 부분
-                    System.out.print("반납할 책의 ISBN을 입력하세요: ");
-                    String returnIsbn = scanner.nextLine();
-                    Book returnedBook = bookLoanService.returnBook(returnIsbn);
+                    Book returnedBook = bookLoanService.returnBook(Prompt.input("%s> ", "반납할 책의 ISBN을 입력하세요:"));
                     if (returnedBook != null) {
                         System.out.println(returnedBook.getTitle() + " 책이 반납되었습니다.");
                     } else {
@@ -84,4 +87,5 @@ public class Main {
             System.out.println(); // 개행
         }
     }
+
 }

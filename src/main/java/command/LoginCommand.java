@@ -13,7 +13,7 @@ public class LoginCommand {
         this.userList = userList;
     }
 
-    public boolean execute() {
+    public User execute() {
         String userName = Prompt.input("이름?");
         String userTel = Prompt.input("핸드폰 뒷 번호?");
         String fullTel = getUserTel(userTel);
@@ -22,11 +22,11 @@ public class LoginCommand {
         int index = userList.indexOf(user);
         if (index == -1) {
             System.out.println("일치하는 회원 정보가 없습니다.");
-            return false;
+            return null;
         }
         User currentUser = userList.get(index);
         System.out.printf("'%s'.\n", currentUser.getName());
-        return true;
+        return currentUser;
     }
 
     private String getUserTel(String userTel) {

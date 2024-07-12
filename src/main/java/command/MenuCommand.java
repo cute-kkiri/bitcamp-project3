@@ -1,7 +1,7 @@
 package command;
 
-import com.sun.tools.javac.Main;
 import util.Prompt;
+import vo.Book;
 import vo.User;
 
 import java.util.ArrayList;
@@ -11,14 +11,16 @@ public class MenuCommand {
 
     String[] menus = {"로그인", "회원 가입", "회원 탈퇴"};
     List<User> userList = new ArrayList<>();
+    List<Book> bookList = new ArrayList<>();
     UserCommand userCommand = new UserCommand(userList);
     LoginCommand loginCommand = new LoginCommand(userList);
+    BookCommand bookCommand = new BookCommand(bookList);
 
     public void execute() {
         printMenus();
 
         while (true) {
-            String command = Prompt.input("%s>", "메인");
+            String command = Prompt.input("> ");
             if (command.equals("menu")) {
                 printMenus();
                 continue;
@@ -45,12 +47,12 @@ public class MenuCommand {
     protected void processMenu(String menuName) {
         switch (menuName) {
             case "로그인":
-                boolean hasUser = loginCommand.execute();
-                if(hasUser) {
-                    System.out.println("대출");
+                User hasUser = loginCommand.execute();
+                if(hasUser != null) {
+                    bookCommand.execute(hasUser);
                 }
                 break;
-            case "회원 등록":
+            case "회원 가입":
                 userCommand.addUser();
                 break;
             case "회원 탈퇴":
@@ -63,9 +65,11 @@ public class MenuCommand {
     }
 
     private void printMenus() {
-        System.out.printf("[%s]\n", "메인");
+        System.out.println();
+        System.out.println("============무인 도서 대출/반납 서비스============");
+        System.out.println();
         for (int i = 0; i < menus.length; i++) {
-            System.out.printf("%d. %s\n", (i + 1), menus[i]);
+            System.out.printf("%d. %s\t", (i + 1), menus[i]);
         }
         System.out.println("0. 이전");
     }

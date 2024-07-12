@@ -1,5 +1,7 @@
 package vo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 // 메모리 설계도
@@ -10,6 +12,7 @@ public class User {
     private int no;
     private String name;
     private String tel;
+    private List<Book> loanedBooks = new ArrayList<>();
 
     public User() {
     }
@@ -62,5 +65,17 @@ public class User {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    public List<Book> getLoanedBooks() {
+        return loanedBooks;
+    }
+
+    public void loanBook(Book book) {
+        loanedBooks.add(book);
+    }
+
+    public void returnBook(Book book) {
+        loanedBooks.remove(book);
     }
 }

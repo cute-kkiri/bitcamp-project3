@@ -1,6 +1,7 @@
 package command;
 
 import vo.Book;
+import vo.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,17 @@ public class BookLoanService {
         availableBooks.put(book.getIsbn(), book);
     }
 
-    public Book loanBook(String isbn) {
+    public Book loanBook(User user, String isbn) {
+        Book book = availableBooks.get(isbn);
+        if (book != null) {
+            loanedBooks.put(isbn, book);
+            user.loanBook(book);
+            return book;
+        }
+        return null;
+    }
+
+    /*public Book loanBook(String isbn) {
         Book book = availableBooks.get(isbn);
         if (book != null) {
             availableBooks.remove(isbn);
@@ -28,7 +39,7 @@ public class BookLoanService {
         } else {
             return null; // 대출 실패: 책을 찾을 수 없거나 이미 대출 중
         }
-    }
+    }*/
 
     public Book returnBook(String isbn) {
         Book book = loanedBooks.get(isbn);
