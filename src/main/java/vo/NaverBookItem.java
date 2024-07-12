@@ -4,6 +4,8 @@ public class NaverBookItem {
     private String title;
     private String author;
     private String isbn;
+    private boolean loanAvailable;
+    private String returnDate;
 
     public String getTitle() {
         return title;
@@ -23,6 +25,18 @@ public class NaverBookItem {
 
     public String getIsbn() {
         return isbn;
+    }
+
+    public boolean getLoanAvailable() {
+        return loanAvailable;
+    }
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
     }
 
     public void setIsbn(String isbn) {

@@ -1,17 +1,49 @@
 package vo;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Book {
     private String title;
     private String author;
     private String isbn;
+    private boolean loanAvailable;
+    private String returnDate;
 
-    public Book(String title, String author, String isbn) {
+    public Book(String title, String author, String isbn, String dummy1, String dummy2) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
+        this.loanAvailable = generateRandomLoanAvailability();
+        this.returnDate = this.loanAvailable ? generateRandomReturnDate() : "-";
     }
 
-    // Getter와 Setter
+    // 대출 가능 여부를 랜덤하게 설정하는 메서드
+    private boolean generateRandomLoanAvailability() {
+        Random random = new Random();
+        double probabilityOfTrue = 0.3;
+        return random.nextDouble() < probabilityOfTrue;
+    }
+
+    // 랜덤한 반납일자를 생성하는 메서드
+    private String generateRandomReturnDate() {
+        LocalDate today = LocalDate.now();
+        LocalDate twoWeeksLater = today.plusWeeks(2);
+        long minDay = today.toEpochDay();
+        long maxDay = twoWeeksLater.toEpochDay();
+        long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay + 1);
+        LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+        return randomDate.format(formatter);
+    }
+
+    // 대출 가능 여부를 "대출 가능" 또는 "대출 불가"로 반환
+    public String getLoanAvailabilityStatus() {
+        return loanAvailable ? "대출 가능" : "대출 불가"; // 변경된 부분
+    }
+
     public String getTitle() {
         return title;
     }
@@ -36,12 +68,31 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public boolean isLoanAvailable() {
+        return loanAvailable;
+    }
+
+    public void setLoanAvailable(boolean loanAvailable) {
+        this.loanAvailable = loanAvailable;
+        this.returnDate = loanAvailable ? generateRandomReturnDate() : "-"; // 변경된 부분
+    }
+
+    public String getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
     @Override
     public String toString() {
         return "vo.Book{" +
-                "title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", isbn='" + isbn + '\'' +
+                "제목='" + title + '\'' +
+                ", 저자='" + author + '\'' +
+                ", 고유번호='" + isbn + '\'' +
+                ", 대출 가능 여부='" + getLoanAvailabilityStatus() + '\'' + // 변경된 부분
+                ", 반납일자='" + getReturnDate() + '\'' + // 변경된 부분
                 '}';
     }
 }

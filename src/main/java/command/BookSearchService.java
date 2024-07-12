@@ -45,18 +45,19 @@ public class BookSearchService {
 
         if (naverResponse != null && naverResponse.getItems() != null) {
             for (NaverBookItem item : naverResponse.getItems()) {
-                Book book = new Book(item.getTitle(), item.getAuthor(), item.getIsbn());
+                Book book = new Book(item.getTitle(), item.getAuthor(), item.getIsbn(), null, null);
                 // BookLoanService에 책 추가
                 bookLoanService.addBookFromSearchResult(book);
                 // 책 정보 출력
                 System.out.println("책 제목: " + book.getTitle());
                 System.out.println("저자: " + book.getAuthor());
                 System.out.println("ISBN: " + book.getIsbn());
+                System.out.println("대출 가능 여부: " + book.getLoanAvailabilityStatus()); // 변경된 부분
+                System.out.println("반납일자: " + book.getReturnDate()); // 변경된 부분
                 System.out.println(); // 개행
             }
         } else {
             System.out.println("검색 결과가 없습니다.");
         }
     }
-
 }
