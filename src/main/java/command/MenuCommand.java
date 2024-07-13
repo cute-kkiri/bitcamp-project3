@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MenuCommand {
 
-    String[] menus = {"로그인", "회원 가입", "회원 탈퇴"};
+    String[] menus = {"로그인", "회원 가입"};
     List<User> userList = new ArrayList<>();
     List<Book> bookList = new ArrayList<>();
     UserCommand userCommand = new UserCommand(userList);
@@ -17,9 +17,8 @@ public class MenuCommand {
     BookCommand bookCommand = new BookCommand(bookList);
 
     public void execute() {
-        printMenus();
-
         while (true) {
+            printMenus();
             String command = Prompt.input("> ");
             if (command.equals("menu")) {
                 printMenus();
@@ -55,9 +54,6 @@ public class MenuCommand {
             case "회원 가입":
                 userCommand.addUser();
                 break;
-            case "회원 탈퇴":
-                userCommand.deleteUser();
-                break;
             /*case "회원 조회":
                 userCommand.listUser();
                 break;*/
@@ -71,7 +67,7 @@ public class MenuCommand {
         for (int i = 0; i < menus.length; i++) {
             System.out.printf("%d. %s\t", (i + 1), menus[i]);
         }
-        System.out.println("0. 이전");
+        System.out.println("0. 종료");
     }
 
     private String getMenuTitle(int menuNo) {

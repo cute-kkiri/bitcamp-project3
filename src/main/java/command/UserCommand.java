@@ -64,6 +64,7 @@ public class UserCommand {
         userList.add(createUser("홍길동", "010-1234-5678"));
         userList.add(createUser("김철수", "010-9876-5432"));
         userList.add(createUser("이영희", "010-5555-5555"));
+        userList.add(createUser("a", "1111"));
     }
 
     private User createUser(String name, String tel) {

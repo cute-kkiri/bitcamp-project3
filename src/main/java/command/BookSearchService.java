@@ -39,11 +39,25 @@ public class BookSearchService {
     }
 
     // 네이버 API에서 검색한 책 정보를 vo.Book 객체로 변환하여 저장
-    public void saveBooksFromResponse(String responseJson, BookLoanService bookLoanService) {
+    public int saveBooksFromResponse(String responseJson, BookLoanService bookLoanService) {
         Gson gson = new Gson();
         NaverBookResponse naverResponse = gson.fromJson(responseJson, NaverBookResponse.class);
 
         if (naverResponse != null && naverResponse.getItems() != null) {
+//            System.out.println("Total Results: " + naverResponse.getTotal());
+
+
+            if (naverResponse.getTotal() == 0) {
+                System.out.println(); // 개행
+                System.out.println("=========================================================================");
+                System.out.println(); // 개행
+                System.out.println("검색 결과가 없습니다.");
+                System.out.println(); // 개행
+                System.out.println("=========================================================================");
+                System.out.println(); // 개행
+                return 0;
+            }
+
             System.out.println(); // 개행
             System.out.println("=========================================================================");
             for (NaverBookItem item : naverResponse.getItems()) {
@@ -60,10 +74,11 @@ public class BookSearchService {
                 System.out.println("ISBN: " + book.getIsbn());
                 System.out.println(); // 개행
             }
+
+
             System.out.println("=========================================================================");
             System.out.println(); // 개행
-        } else {
-            System.out.println("검색 결과가 없습니다.");
         }
+        return 1;
     }
 }

@@ -25,7 +25,7 @@ public class LoginCommand {
             return null;
         }
         User currentUser = userList.get(index);
-        System.out.printf("'%s'.\n", currentUser.getName());
+        System.out.printf("'%s'님 환영합니다.\n", currentUser.getName());
         return currentUser;
     }
 
