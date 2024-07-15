@@ -87,12 +87,10 @@ public class Book {
 
     @Override
     public String toString() {
-        return "vo.Book{" +
-                "제목='" + title + '\'' +
-                ", 저자='" + author + '\'' +
-                ", 고유번호='" + isbn + '\'' +
-                ", 대출 가능 여부='" + getLoanAvailabilityStatus() + '\'' +
-                ", 반납일자='" + getReturnDate() + '\'' +
-                '}';
+        return "제목= " + title + '\n' +
+                " 저자= " + author + '\n' +
+                " 고유번호= " + isbn + '\n' +
+                " 대출 가능여부= " + getLoanAvailabilityStatus() + '\n' +
+                " 반납일자= " + getReturnDate();
     }
 }
