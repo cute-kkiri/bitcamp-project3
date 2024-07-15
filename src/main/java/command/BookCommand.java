@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class BookCommand {
 
-    String[] menus = {"도서 대출", "도서 반납", "대출 연장", "회원 도서 조회"}; // 수정
+    String[] menus = {"도서 대출", "도서 반납", "대출 연장", "대출 목록"}; // 수정
     List<Book> bookList;
     BookSearchService bookSearchService = new BookSearchService();
     BookLoanService bookLoanService = new BookLoanService();
@@ -94,7 +94,6 @@ public class BookCommand {
                         Book loanedBook = bookLoanService.loanBook(user, book.getIsbn());
                         if (loanedBook != null) {
                             System.out.println(loanedBook.getTitle() + " 책이 대출되었습니다.");
-                            System.out.println(user.getName());
                             System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
                         } else {
                             System.out.println("책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다.");
@@ -116,7 +115,7 @@ public class BookCommand {
                 return;
             } else {
                 // 대출 기능 구현 부분
-                String input = Prompt.input("%s> ", "대출할 책의 목록번호 또는 고유번호를 입력하세요");
+                String input = Prompt.input("%s> ", "대출할 책의 목록번호 또는 고유번호를 입력(이전: 0)");
                 Book bookToLoan = null;
 
                 try {
@@ -124,6 +123,10 @@ public class BookCommand {
                     int index = Integer.parseInt(input) - 1;
                     if (index >= 0 && index < bookSearchList.size()) {
                         bookToLoan = bookSearchList.get(index);
+
+                        if (index == 0) {
+                            return;
+                        }
                     }
                 } catch (NumberFormatException e) {
                     // 입력이 ISBN인 경우
@@ -140,7 +143,6 @@ public class BookCommand {
                 if (bookToLoan != null) {
                     Book loanedBook = bookLoanService.loanBook(user, bookToLoan.getIsbn());
                     System.out.println(loanedBook.getTitle() + " 책이 대출되었습니다.");
-                    System.out.println(user.getName());
                     System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
                 } else {
                     System.out.println("책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다.");
