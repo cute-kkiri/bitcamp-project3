@@ -4,6 +4,9 @@ import util.Prompt;
 import vo.Book;
 import vo.User;
 
+import java.text.NumberFormat;
+import java.util.List;
+
 public class BookLoanExtendCommand {
 
     private BookLoanService bookLoanService;
@@ -18,16 +21,44 @@ public class BookLoanExtendCommand {
         for (Book book : user.getLoanedBooks()) {
             System.out.println(book);
         }*/
+
         bookListViewCommand.listUserBooks(user);
 
-        String isbn = Prompt.input("%s> ", "연장할 책의 ISBN을 입력하세요");
-        Book book = bookLoanService.getLoanedBooks().get(isbn);
-        if (book != null) {
-            bookLoanService.extendReturnDate(book);
-            System.out.println(book.getTitle() + " 책의 반납일자가 연장되었습니다.");
-            System.out.println("새 반납일자: " + book.getReturnDate());
+        List<Book> books = user.getLoanedBooks();
+        Book bookToLoan = null;
+        String input = Prompt.input("%s> ", "연장할 책의 목록번호 또는 고유번호를 입력하세요(이전: 0)");
+
+        try {
+            int index = Integer.parseInt(input) -1 ;
+
+            if (index == -1) {
+                return;
+            }
+
+            if (index >= 0 && index < books.size()) {
+                bookToLoan = books.get(index);
+            }
+        } catch (NumberFormatException e) {
+            // 입력이 ISBN인 경우
+            for (Book book : books) {
+                if (book.getIsbn().equals(input)) {
+                    bookToLoan = book;
+                    break;
+                }
+            }
+        }
+
+        if (bookToLoan != null) {
+            bookLoanService.extendReturnDate(bookToLoan);
+            System.out.println(bookToLoan.getTitle() + " 책의 반납일자가 연장되었습니다.");
+            System.out.println("새 반납일자: " + bookToLoan.getReturnDate());
         } else {
             System.out.println("연장 실패: 해당 책의 대출 기록이 없습니다.");
         }
+
+
+
+//        Book book = bookLoanService.getLoanedBooks().get(isbn);
+
     }
 }

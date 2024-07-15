@@ -16,6 +16,7 @@ public class BookCommand {
     BookLoanService bookLoanService = new BookLoanService();
     BookLoanExtendCommand bookLoanExtendCommand = new BookLoanExtendCommand(bookLoanService); // 추가
     BookListViewCommand bookListViewCommand = new BookListViewCommand(); // 추가
+    BookReturnCommand bookReturnCommand = new BookReturnCommand(bookLoanService);
     Scanner scanner = new Scanner(System.in);
 
     public BookCommand(List<Book> bookList) {
@@ -56,8 +57,7 @@ public class BookCommand {
                 loanBook(user);
                 break;
             case "도서 반납":
-                bookListViewCommand.listUserBooks(user);
-                returnBook(user);
+                bookReturnCommand.returnBook(user);
                 break;
             case "대출 연장":
                 bookLoanExtendCommand.extendLoan(user); // 수정
@@ -121,12 +121,11 @@ public class BookCommand {
                 try {
                     // 입력이 인덱스인 경우
                     int index = Integer.parseInt(input) - 1;
+                    if (index == -1) {
+                        return;
+                    }
                     if (index >= 0 && index < bookSearchList.size()) {
                         bookToLoan = bookSearchList.get(index);
-
-                        if (index == 0) {
-                            return;
-                        }
                     }
                 } catch (NumberFormatException e) {
                     // 입력이 ISBN인 경우
