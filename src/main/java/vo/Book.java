@@ -17,7 +17,7 @@ public class Book {
         this.author = author;
         this.isbn = isbn;
         this.loanAvailable = generateRandomLoanAvailability();
-        this.returnDate = this.loanAvailable ? generateRandomReturnDate() : "-";
+        this.returnDate = this.loanAvailable ? "-" : generateRandomReturnDate(); // 수정
     }
 
     // 대출 가능 여부를 랜덤하게 설정하는 메서드
@@ -41,7 +41,7 @@ public class Book {
 
     // 대출 가능 여부를 "대출 가능" 또는 "대출 불가"로 반환
     public String getLoanAvailabilityStatus() {
-        return loanAvailable ? "대출 가능" : "대출 불가"; // 변경된 부분
+        return loanAvailable ? "대출 가능" : "대출 불가"; // 수정
     }
 
     public String getTitle() {
@@ -74,7 +74,7 @@ public class Book {
 
     public void setLoanAvailable(boolean loanAvailable) {
         this.loanAvailable = loanAvailable;
-        this.returnDate = loanAvailable ? generateRandomReturnDate() : "-"; // 변경된 부분
+        this.returnDate = loanAvailable ? "-" : generateRandomReturnDate(); // 수정
     }
 
     public String getReturnDate() {
@@ -91,8 +91,8 @@ public class Book {
                 "제목='" + title + '\'' +
                 ", 저자='" + author + '\'' +
                 ", 고유번호='" + isbn + '\'' +
-                ", 대출 가능 여부='" + getLoanAvailabilityStatus() + '\'' + // 변경된 부분
-                ", 반납일자='" + getReturnDate() + '\'' + // 변경된 부분
+                ", 대출 가능 여부='" + getLoanAvailabilityStatus() + '\'' +
+                ", 반납일자='" + getReturnDate() + '\'' +
                 '}';
     }
 }

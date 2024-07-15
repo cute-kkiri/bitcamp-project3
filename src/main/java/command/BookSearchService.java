@@ -38,15 +38,11 @@ public class BookSearchService {
         }
     }
 
-    // 네이버 API에서 검색한 책 정보를 vo.Book 객체로 변환하여 저장
     public int saveBooksFromResponse(String responseJson, BookLoanService bookLoanService) {
         Gson gson = new Gson();
         NaverBookResponse naverResponse = gson.fromJson(responseJson, NaverBookResponse.class);
 
         if (naverResponse != null && naverResponse.getItems() != null) {
-//            System.out.println("Total Results: " + naverResponse.getTotal());
-
-
             if (naverResponse.getTotal() == 0) {
                 System.out.println(); // 개행
                 System.out.println("=========================================================================");
@@ -63,22 +59,23 @@ public class BookSearchService {
             for (NaverBookItem item : naverResponse.getItems()) {
                 int index = naverResponse.getItems().indexOf(item);
                 Book book = new Book(item.getTitle(), item.getAuthor(), item.getIsbn(), null, null);
-                // BookLoanService에 책 추가
                 bookLoanService.addBookFromSearchResult(book);
-                // 책 정보 출력
                 System.out.printf("%d. ", index + 1);
                 System.out.println("책 제목: " + book.getTitle());
                 System.out.println("저자: " + book.getAuthor());
-                System.out.println("대출 가능 여부: " + book.getLoanAvailabilityStatus()); // 변경된 부분
-                System.out.println("반납일자: " + book.getReturnDate()); // 변경된 부분
+                System.out.println("대출 가능 여부: " + book.getLoanAvailabilityStatus());
+                System.out.println("반납일자: " + book.getReturnDate());
                 System.out.println("ISBN: " + book.getIsbn());
                 System.out.println(); // 개행
             }
-
 
             System.out.println("=========================================================================");
             System.out.println(); // 개행
         }
         return 1;
+    }
+
+    public Book searchBookByIsbn(String isbn, BookLoanService bookLoanService) { // 수정
+        return bookLoanService.getAvailableBooks().get(isbn);
     }
 }

@@ -3,6 +3,7 @@ package command;
 import vo.Book;
 import vo.User;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,14 +16,15 @@ public class BookLoanService {
         loanedBooks = new HashMap<>();
     }
 
-    // 네이버 API에서 검색한 책 정보를 저장하는 메서드
     public void addBookFromSearchResult(Book book) {
         availableBooks.put(book.getIsbn(), book);
     }
 
     public Book loanBook(User user, String isbn) {
         Book book = availableBooks.get(isbn);
-        if (book != null) {
+        if (book != null && book.isLoanAvailable()) {
+            book.setLoanAvailable(false);
+            book.setReturnDate(generateReturnDate());
             loanedBooks.put(isbn, book);
             user.loanBook(book);
             return book;
@@ -30,26 +32,16 @@ public class BookLoanService {
         return null;
     }
 
-    /*public Book loanBook(String isbn) {
-        Book book = availableBooks.get(isbn);
-        if (book != null) {
-            availableBooks.remove(isbn);
-            loanedBooks.put(isbn, book);
-            return book;
-        } else {
-            return null; // 대출 실패: 책을 찾을 수 없거나 이미 대출 중
-        }
-    }*/
-
     public Book returnBook(String isbn) {
         Book book = loanedBooks.get(isbn);
         if (book != null) {
+            book.setLoanAvailable(true);
+            book.setReturnDate("-");
             loanedBooks.remove(isbn);
             availableBooks.put(isbn, book);
             return book;
-        } else {
-            return null; // 반납 실패: 대출 기록이 없음
         }
+        return null;
     }
 
     public Map<String, Book> getAvailableBooks() {
@@ -58,5 +50,15 @@ public class BookLoanService {
 
     public Map<String, Book> getLoanedBooks() {
         return loanedBooks;
+    }
+
+    private String generateReturnDate() {
+        LocalDate returnDate = LocalDate.now().plusWeeks(2);
+        return returnDate.toString();
+    }
+
+    public void extendReturnDate(Book book) {
+        LocalDate newReturnDate = LocalDate.parse(book.getReturnDate()).plusDays(7);
+        book.setReturnDate(newReturnDate.toString());
     }
 }

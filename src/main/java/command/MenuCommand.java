@@ -47,16 +47,13 @@ public class MenuCommand {
         switch (menuName) {
             case "로그인":
                 User hasUser = loginCommand.execute();
-                if(hasUser != null) {
+                if (hasUser != null) {
                     bookCommand.execute(hasUser);
                 }
                 break;
             case "회원 가입":
                 userCommand.addUser();
                 break;
-            /*case "회원 조회":
-                userCommand.listUser();
-                break;*/
         }
     }
 
