@@ -23,12 +23,12 @@ public class BookCommand {
     }
 
     public void execute(User user) {
+        System.out.println();
+
         while (true) {
-            printLoanedBooks(user); // 수정
             printMenus();
             String command = Prompt.input("> ");
             if (command.equals("menu")) {
-                printMenus();
                 continue;
             } else if (command.equals("0")) { // 이전 메뉴 선택
                 return;
@@ -56,12 +56,13 @@ public class BookCommand {
                 loanBook(user);
                 break;
             case "도서 반납":
+                bookListViewCommand.listUserBooks(user);
                 returnBook(user);
                 break;
             case "대출 연장":
                 bookLoanExtendCommand.extendLoan(user); // 수정
                 break;
-            case "회원 도서 조회": // 수정
+            case "대출 목록": // 수정
                 bookListViewCommand.listUserBooks(user); // 수정
                 break;
         }
@@ -71,14 +72,14 @@ public class BookCommand {
     private void loanBook(User user) {
         System.out.println("1. 도서 제목 검색");
         System.out.println("2. 고유번호 검색");
-        String searchOption = Prompt.input("%s> ", "선택하세요: ");
+        String searchOption = Prompt.input("%s> ", "선택하세요");
 
         try {
             String response;
             if ("1".equals(searchOption)) {
                 response = bookSearchService.searchBooks(Prompt.input("%s> ", "검색어를 입력하세요"));
             } else if ("2".equals(searchOption)) {
-                String isbn = Prompt.input("%s> ", "ISBN 번호를 입력하세요: ");
+                String isbn = Prompt.input("%s > ", "ISBN 번호를 입력하세요");
                 Book book = bookSearchService.searchBookByIsbn(isbn, bookLoanService); // 수정
                 if (book != null) {
                     System.out.println("책 제목: " + book.getTitle());
@@ -88,7 +89,7 @@ public class BookCommand {
                     System.out.println("ISBN: " + book.getIsbn());
                     System.out.println(); // 개행
 
-                    String loanOption = Prompt.input("%s> ", "대출하시겠습니까? (y/n): ");
+                    String loanOption = Prompt.input("%s> ", "대출하시겠습니까? (y/n)");
                     if ("y".equalsIgnoreCase(loanOption)) {
                         Book loanedBook = bookLoanService.loanBook(user, book.getIsbn());
                         if (loanedBook != null) {
@@ -109,14 +110,35 @@ public class BookCommand {
             }
 
             // 네이버 API에서 가져온 데이터를 vo.Book 객체로 변환 및 저장
-            int result = bookSearchService.saveBooksFromResponse(response, bookLoanService);
+            List<Book> bookSearchList = bookSearchService.saveBooksFromResponse(response, bookLoanService);
 
-            if (result == 0) {
+            if (bookSearchList == null) {
                 return;
             } else {
                 // 대출 기능 구현 부분
-                Book loanedBook = bookLoanService.loanBook(user, Prompt.input("%s> ", "대출할 책의 ISBN을 입력하세요:"));
-                if (loanedBook != null) {
+                String input = Prompt.input("%s> ", "대출할 책의 목록번호 또는 고유번호를 입력하세요");
+                Book bookToLoan = null;
+
+                try {
+                    // 입력이 인덱스인 경우
+                    int index = Integer.parseInt(input) - 1;
+                    if (index >= 0 && index < bookSearchList.size()) {
+                        bookToLoan = bookSearchList.get(index);
+                    }
+                } catch (NumberFormatException e) {
+                    // 입력이 ISBN인 경우
+                    for (Book book : bookSearchList) {
+                        if (book.getIsbn().equals(input)) {
+                            bookToLoan = book;
+                            break;
+                        }
+                    }
+                }
+
+
+//                Book loanedBook = bookLoanService.loanBook(user, Prompt.input("%s> ", "대출할 책의 ISBN을 입력하세요"));
+                if (bookToLoan != null) {
+                    Book loanedBook = bookLoanService.loanBook(user, bookToLoan.getIsbn());
                     System.out.println(loanedBook.getTitle() + " 책이 대출되었습니다.");
                     System.out.println(user.getName());
                     System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
@@ -130,7 +152,7 @@ public class BookCommand {
     }
 
     private void returnBook(User user) {
-        Book returnedBook = bookLoanService.returnBook(Prompt.input("%s> ", "반납할 책의 ISBN을 입력하세요:"));
+        Book returnedBook = bookLoanService.returnBook(Prompt.input("%s> ", "반납할 책의 ISBN을 입력하세요"));
         if (returnedBook != null) {
             user.returnBook(returnedBook);
             System.out.println(returnedBook.getTitle() + " 책이 반납되었습니다.");
@@ -139,13 +161,16 @@ public class BookCommand {
         }
     }
 
-    private void printLoanedBooks(User user) { // 수정
+    /*private void printLoanedBooks(User user) { // 수정
+
         System.out.println("대출 중인 책 목록:");
+        bookListViewCommand.listUserBooks(user); // 수정
+
         int index = 0;
         for (Book book : user.getLoanedBooks()) {
             System.out.printf("%d. %s\n", ++index, book);
         }
-    }
+    }*/
 
     private void printMenus() {
         System.out.println();

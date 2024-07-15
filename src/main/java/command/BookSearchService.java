@@ -9,6 +9,8 @@ import vo.NaverBookItem;
 import vo.NaverBookResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookSearchService {
     private static final String CLIENT_ID = "ZjQIawPDjrOWGVsJb24P";
@@ -38,7 +40,7 @@ public class BookSearchService {
         }
     }
 
-    public int saveBooksFromResponse(String responseJson, BookLoanService bookLoanService) {
+    public List<Book> saveBooksFromResponse(String responseJson, BookLoanService bookLoanService) {
         Gson gson = new Gson();
         NaverBookResponse naverResponse = gson.fromJson(responseJson, NaverBookResponse.class);
 
@@ -51,11 +53,13 @@ public class BookSearchService {
                 System.out.println(); // 개행
                 System.out.println("=========================================================================");
                 System.out.println(); // 개행
-                return 0;
+                return null;
             }
 
+            List<Book> books = new ArrayList<>();
             System.out.println(); // 개행
             System.out.println("=========================================================================");
+            System.out.println(); // 개행
             for (NaverBookItem item : naverResponse.getItems()) {
                 int index = naverResponse.getItems().indexOf(item);
                 Book book = new Book(item.getTitle(), item.getAuthor(), item.getIsbn(), null, null);
@@ -65,14 +69,21 @@ public class BookSearchService {
                 System.out.println("저자: " + book.getAuthor());
                 System.out.println("대출 가능 여부: " + book.getLoanAvailabilityStatus());
                 System.out.println("반납일자: " + book.getReturnDate());
-                System.out.println("ISBN: " + book.getIsbn());
+                System.out.println("고유번호: " + book.getIsbn());
                 System.out.println(); // 개행
+
+                books.add(book);
             }
 
             System.out.println("=========================================================================");
             System.out.println(); // 개행
+
+            return books;
+        } else {
+            System.out.println("검색 결과가 없습니다.");
+            return null;
         }
-        return 1;
+
     }
 
     public Book searchBookByIsbn(String isbn, BookLoanService bookLoanService) { // 수정

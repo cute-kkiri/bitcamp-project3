@@ -7,18 +7,20 @@ import vo.User;
 public class BookLoanExtendCommand {
 
     private BookLoanService bookLoanService;
+    BookListViewCommand bookListViewCommand = new BookListViewCommand();
 
     public BookLoanExtendCommand(BookLoanService bookLoanService) {
         this.bookLoanService = bookLoanService;
     }
 
     public void extendLoan(User user) {
-        System.out.println("대출 중인 책 목록:");
+        /*System.out.println("대출 중인 책 목록:");
         for (Book book : user.getLoanedBooks()) {
             System.out.println(book);
-        }
+        }*/
+        bookListViewCommand.listUserBooks(user);
 
-        String isbn = Prompt.input("%s> ", "연장할 책의 ISBN을 입력하세요: ");
+        String isbn = Prompt.input("%s> ", "연장할 책의 ISBN을 입력하세요");
         Book book = bookLoanService.getLoanedBooks().get(isbn);
         if (book != null) {
             bookLoanService.extendReturnDate(book);

@@ -21,7 +21,6 @@ public class MenuCommand {
             printMenus();
             String command = Prompt.input("> ");
             if (command.equals("menu")) {
-                printMenus();
                 continue;
             } else if (command.equals("0")) { // 이전 메뉴 선택
                 return;

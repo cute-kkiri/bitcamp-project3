@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static util.Ansi.*;
+
 public class Book {
     private String title;
     private String author;
@@ -41,7 +43,7 @@ public class Book {
 
     // 대출 가능 여부를 "대출 가능" 또는 "대출 불가"로 반환
     public String getLoanAvailabilityStatus() {
-        return loanAvailable ? "대출 가능" : "대출 불가"; // 수정
+        return loanAvailable ? GREEN + "대출 가능" + RESET : RED + "대출 불가" + RESET; // 수정
     }
 
     public String getTitle() {
@@ -87,10 +89,10 @@ public class Book {
 
     @Override
     public String toString() {
-        return "제목= " + title + '\n' +
-                " 저자= " + author + '\n' +
-                " 고유번호= " + isbn + '\n' +
-                " 대출 가능여부= " + getLoanAvailabilityStatus() + '\n' +
-                " 반납일자= " + getReturnDate();
+        return "제목: " + title + '\n' +
+                "저자: " + author + '\n' +
+                "고유번호: " + isbn + '\n' +
+                "반납일자: " + getReturnDate();
+//                "대출 가능여부: " + getLoanAvailabilityStatus() + '\n' +
     }
 }
