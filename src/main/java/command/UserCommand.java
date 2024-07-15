@@ -15,11 +15,26 @@ public class UserCommand {
     }
 
     public void addUser() {
-        User user = new User();
-        user.setName(Prompt.input("이름?"));
-        user.setTel(Prompt.input("핸드폰 번호?"));
-        user.setNo(User.getNextSeqNo());
-        userList.add(user);
+        String userName = Prompt.input("이름?");
+        String userTel = Prompt.input("핸드폰 번호?");
+
+        if (!userName.isEmpty() && !userTel.isEmpty()) {
+            User user = new User(userName, userTel);
+
+            int index = userList.indexOf(user);
+            if (index == -1) {
+                System.out.println("회원가입이 완료되었습니다.");
+                user.setName(userName);
+                user.setTel(userTel);
+                user.setNo(User.getNextSeqNo());
+                userList.add(user);
+            } else {
+                System.out.println("이미 존재하는 회원입니다.");
+            }
+            // listUser();
+        } else {
+            System.out.println("회원 정보를 정확하게 입력해주세요.");
+        }
     }
 
     public void deleteUser() {
@@ -45,7 +60,7 @@ public class UserCommand {
 
     private String getUserTel(String userTel) {
         for (User user : userList) {
-            if (userTel.length() == 4 && user.getTel().endsWith(userTel)) {
+            if (user.getTel().endsWith(userTel)) {
                 return user.getTel();
             }
         }
@@ -55,7 +70,7 @@ public class UserCommand {
     public void listUser() {
         System.out.println("번호 이름 이메일");
         for (User user : userList) {
-            System.out.printf("%s %s\n", user.getName(), user.getTel());
+            System.out.printf("%d. %s %s\n", user.getNo(), user.getName(), user.getTel());
         }
     }
     

@@ -181,7 +181,7 @@ public class BookCommand {
         for (int i = 0; i < menus.length; i++) {
             System.out.printf("%d. %s\t", (i + 1), menus[i]);
         }
-        System.out.println("0. 종료");
+        System.out.println("0. 이전");
     }
 
     private String getMenuTitle(int menuNo) {

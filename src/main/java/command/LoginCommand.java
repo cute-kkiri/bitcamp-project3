@@ -31,7 +31,8 @@ public class LoginCommand {
 
     private String getUserTel(String userTel) {
         for (User user : userList) {
-            if (userTel.length() == 4 && user.getTel().endsWith(userTel)) {
+//            if (userTel.length() == 4 && user.getTel().endsWith(userTel)) {
+            if (user.getTel().endsWith(userTel)) {
                 return user.getTel();
             }
         }

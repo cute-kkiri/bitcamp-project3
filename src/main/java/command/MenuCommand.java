@@ -7,9 +7,11 @@ import vo.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import static util.Ansi.*;
+
 public class MenuCommand {
 
-    String[] menus = {"로그인", "회원 가입"};
+    String[] menus = {"로그인", "회원 가입", "회원 탈퇴"};
     List<User> userList = new ArrayList<>();
     List<Book> bookList = new ArrayList<>();
     UserCommand userCommand = new UserCommand(userList);
@@ -53,6 +55,9 @@ public class MenuCommand {
             case "회원 가입":
                 userCommand.addUser();
                 break;
+            case "회원 탈퇴":
+                userCommand.deleteUser();
+                break;
         }
     }
 
@@ -63,7 +68,7 @@ public class MenuCommand {
         for (int i = 0; i < menus.length; i++) {
             System.out.printf("%d. %s\t", (i + 1), menus[i]);
         }
-        System.out.println("0. 종료");
+        System.out.println(RED + "0. 종료" + RESET);
     }
 
     private String getMenuTitle(int menuNo) {
