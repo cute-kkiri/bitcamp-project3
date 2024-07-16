@@ -7,6 +7,8 @@ import vo.User;
 import java.text.NumberFormat;
 import java.util.List;
 
+import static util.Ansi.*;
+
 public class BookLoanExtendCommand {
 
     private BookLoanService bookLoanService;
@@ -50,10 +52,10 @@ public class BookLoanExtendCommand {
 
         if (bookToLoan != null) {
             bookLoanService.extendReturnDate(bookToLoan);
-            System.out.println(bookToLoan.getTitle() + " 책의 반납일자가 연장되었습니다.");
-            System.out.println("새 반납일자: " + bookToLoan.getReturnDate());
+            System.out.println(GREEN + bookToLoan.getTitle() + " 책의 반납일자가 연장되었습니다." + RESET);
+            System.out.printf("새 반납일자: %s\n", CYAN + bookToLoan.getReturnDate() + RESET);
         } else {
-            System.out.println("연장 실패: 해당 책의 대출 기록이 없습니다.");
+            System.out.println(ORANGE + "연장 실패: 해당 책의 대출 기록이 없습니다." + RESET);
         }
 
 

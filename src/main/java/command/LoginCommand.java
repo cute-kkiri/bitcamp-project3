@@ -5,6 +5,8 @@ import vo.User;
 
 import java.util.List;
 
+import static util.Ansi.*;
+
 public class LoginCommand {
 
     private List<User> userList;
@@ -25,7 +27,7 @@ public class LoginCommand {
             return null;
         }
         User currentUser = userList.get(index);
-        System.out.printf("'%s'님 환영합니다.\n", currentUser.getName());
+        System.out.printf("'%s'님 환영합니다.\n", CYAN + currentUser.getName() + RESET);
         return currentUser;
     }
 

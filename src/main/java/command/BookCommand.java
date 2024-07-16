@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+import static util.Ansi.*;
+
 public class BookCommand {
 
     String[] menus = {"도서 대출", "도서 반납", "대출 연장", "대출 목록"}; // 수정
@@ -93,10 +95,10 @@ public class BookCommand {
                     if ("y".equalsIgnoreCase(loanOption)) {
                         Book loanedBook = bookLoanService.loanBook(user, book.getIsbn());
                         if (loanedBook != null) {
-                            System.out.println(loanedBook.getTitle() + " 책이 대출되었습니다.");
+                            System.out.println(GREEN + loanedBook.getTitle() + " 책이 대출되었습니다." + RESET);
                             System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
                         } else {
-                            System.out.println("책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다.");
+                            System.out.println(ORANGE + "책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다." + RESET);
                         }
                     }
                 } else {
@@ -126,12 +128,28 @@ public class BookCommand {
                     }
                     if (index >= 0 && index < bookSearchList.size()) {
                         bookToLoan = bookSearchList.get(index);
+
+                        if (bookToLoan.isLoanAvailable()) {
+                            Book loanedBook = bookLoanService.loanBook(user, bookToLoan.getIsbn());
+                            System.out.println(GREEN + loanedBook.getTitle() + " 책이 대출되었습니다." + RESET);
+                            System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
+                        } else {
+                            System.out.println(ORANGE + "책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다." + RESET);
+                        }
                     }
                 } catch (NumberFormatException e) {
                     // 입력이 ISBN인 경우
                     for (Book book : bookSearchList) {
                         if (book.getIsbn().equals(input)) {
                             bookToLoan = book;
+
+                            if (bookToLoan.isLoanAvailable()) {
+                                Book loanedBook = bookLoanService.loanBook(user, bookToLoan.getIsbn());
+                                System.out.println(GREEN + loanedBook.getTitle() + " 책이 대출되었습니다." + RESET);
+                                System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
+                            } else {
+                                System.out.println(ORANGE + "책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다." + RESET);
+                            }
                             break;
                         }
                     }
@@ -139,28 +157,28 @@ public class BookCommand {
 
 
 //                Book loanedBook = bookLoanService.loanBook(user, Prompt.input("%s> ", "대출할 책의 ISBN을 입력하세요"));
-                if (bookToLoan != null) {
+                /*if (bookToLoan != null) {
                     Book loanedBook = bookLoanService.loanBook(user, bookToLoan.getIsbn());
                     System.out.println(loanedBook.getTitle() + " 책이 대출되었습니다.");
                     System.out.println("반납일자: " + loanedBook.getReturnDate()); // 수정
                 } else {
-                    System.out.println("책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다.");
-                }
+                    System.out.println(ORANGE + "책 대출 실패: 해당 책을 찾을 수 없거나 이미 대출 중입니다." + RESET);
+                }*/
             }
         } catch (IOException e) {
             System.err.println("책 검색 중 오류 발생");
         }
     }
 
-    private void returnBook(User user) {
+    /*private void returnBook(User user) {
         Book returnedBook = bookLoanService.returnBook(Prompt.input("%s> ", "반납할 책의 ISBN을 입력하세요"));
         if (returnedBook != null) {
             user.returnBook(returnedBook);
-            System.out.println(returnedBook.getTitle() + " 책이 반납되었습니다.");
+            System.out.println(GREEN + returnedBook.getTitle() + " 책이 반납되었습니다." + RESET);
         } else {
-            System.out.println("책 반납 실패: 해당 책의 대출 기록이 없습니다.");
+            System.out.println(ORANGE + "책 반납 실패: 해당 책의 대출 기록이 없습니다." + RESET);
         }
-    }
+    }*/
 
     /*private void printLoanedBooks(User user) { // 수정
 
@@ -175,7 +193,7 @@ public class BookCommand {
 
     private void printMenus() {
         System.out.println();
-        System.out.println("============무인 도서 대출/반납 서비스============");
+        System.out.println("============ 무인 도서 대출/반납 서비스 ============");
         System.out.println();
         for (int i = 0; i < menus.length; i++) {
             System.out.printf("%d. %s\t", (i + 1), menus[i]);

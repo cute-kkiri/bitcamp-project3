@@ -5,6 +5,8 @@ import vo.User;
 
 import java.util.List;
 
+import static util.Ansi.*;
+
 public class UserCommand {
 
     private List<User> userList;
@@ -51,16 +53,16 @@ public class UserCommand {
 
         User existingUser = userList.get(index);
         if (!existingUser.getLoanedBooks().isEmpty()) { // 대출 중인 책이 있는 경우
-            System.out.println("탈퇴 실패: 대출 중인 책을 반납 후 다시 시도하세요."); // (최종수정)
+            System.out.println(ORANGE + "탈퇴 실패: 대출 중인 책을 반납 후 다시 시도하세요." + RESET); // (최종수정)
             return;
         }
 
         String str = Prompt.input("(%s) 삭제하시겠습니까(y)?", existingUser.getName());
         if (str.equalsIgnoreCase("y")) {
             User deletedUser = userList.remove(index);
-            System.out.printf("'%s' 회원을 삭제 했습니다.\n", deletedUser.getName());
+            System.out.printf("'%s'님 회원 탈퇴되었습니다.\n", deletedUser.getName());
         } else {
-            System.out.printf("'%s' 회원을 유지합니다.\n", existingUser.getName());
+            System.out.printf("'%s'님 회원을 유지합니다.\n", existingUser.getName());
         }
     }
 

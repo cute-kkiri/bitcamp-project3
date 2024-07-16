@@ -6,6 +6,8 @@ import vo.User;
 
 import java.util.List;
 
+import static util.Ansi.*;
+
 public class BookReturnCommand {
     private BookLoanService bookLoanService;
     BookListViewCommand bookListViewCommand = new BookListViewCommand();
@@ -43,9 +45,9 @@ public class BookReturnCommand {
 //        Book returnedBook = bookLoanService.returnBook(input);
             if (returnedBook != null) {
             user.returnBook(returnedBook);
-            System.out.println(returnedBook.getTitle() + " 책이 반납되었습니다.");
+            System.out.println(GREEN + returnedBook.getTitle() + " 책이 반납되었습니다." + RESET);
         } else {
-            System.out.println("책 반납 실패: 해당 책의 대출 기록이 없습니다.");
+            System.out.println(ORANGE + "책 반납 실패: 해당 책의 대출 기록이 없습니다." + RESET);
         }
     }
 

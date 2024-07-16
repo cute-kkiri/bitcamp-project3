@@ -63,7 +63,7 @@ public class MenuCommand {
 
     private void printMenus() {
         System.out.println();
-        System.out.println("============무인 도서 대출/반납 서비스============");
+        System.out.println("============ 무인 도서 대출/반납 서비스 ============");
         System.out.println();
         for (int i = 0; i < menus.length; i++) {
             System.out.printf("%d. %s\t", (i + 1), menus[i]);
