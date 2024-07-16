@@ -11,7 +11,7 @@ public class UserCommand {
 
     public UserCommand(List<User> list) {
         this.userList = list;
-         initializeDummyData();
+        initializeDummyData();
     }
 
     public void addUser() {
@@ -49,12 +49,18 @@ public class UserCommand {
             return;
         }
 
-        String str = Prompt.input("(%s) 삭제하시겠습니까(y)?", user.getName());
+        User existingUser = userList.get(index);
+        if (!existingUser.getLoanedBooks().isEmpty()) { // 대출 중인 책이 있는 경우
+            System.out.println("탈퇴 실패: 대출 중인 책을 반납 후 다시 시도하세요."); // (최종수정)
+            return;
+        }
+
+        String str = Prompt.input("(%s) 삭제하시겠습니까(y)?", existingUser.getName());
         if (str.equalsIgnoreCase("y")) {
             User deletedUser = userList.remove(index);
             System.out.printf("'%s' 회원을 삭제 했습니다.\n", deletedUser.getName());
         } else {
-            System.out.printf("'%s' 회원을 유지합니다.\n", user.getName());
+            System.out.printf("'%s' 회원을 유지합니다.\n", existingUser.getName());
         }
     }
 
@@ -73,7 +79,7 @@ public class UserCommand {
             System.out.printf("%d. %s %s\n", user.getNo(), user.getName(), user.getTel());
         }
     }
-    
+
     // DummyData
     private void initializeDummyData() {
         userList.add(createUser("홍길동", "010-1234-5678"));
