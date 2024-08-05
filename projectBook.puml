@@ -1,0 +1,213 @@
+@startuml
+class App {
++ {static} void main(String[])
+}
+
+class vo.NaverBookResponse {
+- int total
+- int start
+- int display
+- List<NaverBookItem> items
++ int getTotal()
++ int getStart()
++ int getDisplay()
++ List<NaverBookItem> getItems()
++ void setItems(List<NaverBookItem>)
+}
+
+
+class command.BookReturnCommand {
+- BookLoanService bookLoanService
+~ BookListViewCommand bookListViewCommand
++ void returnBook(User)
+}
+
+
+class command.BookLoanExtendCommand {
+- BookLoanService bookLoanService
+~ BookListViewCommand bookListViewCommand
++ void extendLoan(User)
+}
+
+
+class command.UserCommand {
+- List<User> userList
++ void addUser()
++ void deleteUser()
+- String getUserTel(String)
++ void listUser()
+- void initializeDummyData()
+- User createUser(String,String)
+}
+
+
+class util.Prompt {
+~ {static} Scanner keyboardScanner
++ {static} String input(String,Object)
++ {static} int inputInt(String,Object)
++ {static} void close()
+}
+
+
+class command.LoginCommand {
+- List<User> userList
++ User execute()
+- String getUserTel(String)
+}
+
+
+class util.Ansi {
++ {static} String STRIKE
++ {static} String BOLD
++ {static} String GRAY
++ {static} String LIGHTGRAY
++ {static} String CYAN
++ {static} String GREEN
++ {static} String RED
++ {static} String LIRHGTRED
++ {static} String ORANGE
++ {static} String YELLOW
++ {static} String BRIGHTYELLOW
++ {static} String LIGHTYELLOW
++ {static} String RESET
+}
+
+class vo.Book {
+- String title
+- String author
+- String isbn
+- boolean loanAvailable
+- String returnDate
+- boolean generateRandomLoanAvailability()
+- String generateRandomReturnDate()
++ String getLoanAvailabilityStatus()
++ String getTitle()
++ void setTitle(String)
++ String getAuthor()
++ void setAuthor(String)
++ String getIsbn()
++ void setIsbn(String)
++ boolean isLoanAvailable()
++ void setLoanAvailable(boolean)
++ String getReturnDate()
++ void setReturnDate(String)
++ String toString()
+}
+
+
+class vo.NaverBookItem {
+- String title
+- String author
+- String isbn
+- boolean loanAvailable
+- String returnDate
++ String getTitle()
++ void setTitle(String)
++ String getAuthor()
++ void setAuthor(String)
++ String getIsbn()
++ boolean getLoanAvailable()
++ String getReturnDate()
++ void setReturnDate(String)
++ void setIsbn(String)
+}
+
+
+class command.BookListViewCommand {
++ void listUserBooks(User)
+}
+
+class util.HttpServerApp {
+- {static} String CLIENT_ID
+- {static} String CLIENT_SECRET
++ {static} void main(String[])
+}
+
+
+class util.HttpServerApp$BookSearchHandler {
++ void handle(HttpExchange)
+- String searchBooks(String)
+}
+
+class command.BookSearchService {
+- {static} String CLIENT_ID
+- {static} String CLIENT_SECRET
+- OkHttpClient client
++ String searchBooks(String)
++ List<Book> saveBooksFromResponse(String,BookLoanService)
++ Book searchBookByIsbn(String,BookLoanService)
+}
+
+
+class command.MenuCommand {
+~ String[] menus
+~ List<User> userList
+~ List<Book> bookList
+~ UserCommand userCommand
+~ LoginCommand loginCommand
+~ BookCommand bookCommand
++ void execute()
+# void processMenu(String)
+- void printMenus()
+- String getMenuTitle(int)
+- boolean isValidateMenu(int)
+}
+
+
+class command.BookLoanService {
+- Map<String,Book> availableBooks
+- Map<String,Book> loanedBooks
++ void addBookFromSearchResult(Book)
++ Book loanBook(User,String)
++ Book returnBook(String)
++ Map<String,Book> getAvailableBooks()
++ Map<String,Book> getLoanedBooks()
+- String generateReturnDate()
++ void extendReturnDate(Book)
+}
+
+
+class vo.User {
+- {static} int seqNo
+- int no
+- String name
+- String tel
+- List<Book> loanedBooks
++ {static} int getNextSeqNo()
++ boolean equals(Object)
++ int hashCode()
++ int getNo()
++ void setNo(int)
++ String getName()
++ void setName(String)
++ String getTel()
++ void setTel(String)
++ List<Book> getLoanedBooks()
++ void loanBook(Book)
++ void returnBook(Book)
+}
+
+
+class command.BookCommand {
+~ String[] menus
+~ List<Book> bookList
+~ BookSearchService bookSearchService
+~ BookLoanService bookLoanService
+~ BookLoanExtendCommand bookLoanExtendCommand
+~ BookListViewCommand bookListViewCommand
+~ BookReturnCommand bookReturnCommand
+~ Scanner scanner
++ void execute(User)
+# void processMenu(User,String)
+- void loanBook(User)
+- void printMenus()
+- String getMenuTitle(int)
+- boolean isValidateMenu(int)
+}
+
+
+
+
+util.HttpServerApp +.. util.HttpServerApp$BookSearchHandler
+util.HttpHandler <|.. util.HttpServerApp$BookSearchHandler
+@enduml

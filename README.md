@@ -61,3 +61,6 @@ bitcamp 세 번째 프로젝트
     
 - <strong>회원 탈퇴</strong>: 회원 탈퇴 기능.
   - 이름, 핸드폰 뒷 번호
+
+## 아키텍쳐
+![UML](projectBook.png)
